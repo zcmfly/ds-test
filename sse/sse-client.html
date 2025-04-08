@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE Client</title>
+</head>
+<body>
+    <h1>SSE Client</h1>
+    <div id="messages" >
+
+    </div>
+</body>
+
+<script>
+    let source = null;
+    let userId = 1001;
+    if(window.EventSource){
+        source = new EventSource("http://127.0.0.1:8080/sse/connect?userId=" + userId);
+        source.addEventListener("open", function(e){
+            console.log("建立连接成功...");
+            var text = document.getElementById("messages");
+            text += '\n建立连接成功...';
+            document.getElementById("messages").innerHTML = text;
+
+        },false);
+
+
+        source.addEventListener("message", function(e){
+            var msg = e.data;
+
+            var text = document.getElementById("messages");
+            text += '\n' + msg;
+            document.getElementById("messages").innerHTML = text;
+        },false);
+
+        source.addEventListener("add", function(e){
+            var msg = e.data;
+
+            var text = document.getElementById("messages");
+            text += '\n' + msg;
+            document.getElementById("messages").innerHTML = text;
+        },false);
+
+        source.addEventListener("custom", function(e){
+            var msg = e.data;
+
+            var text = document.getElementById("messages");
+            text += '\n自定义事件' + msg;
+            document.getElementById("messages").innerHTML = text;
+        },false);
+
+        source.addEventListener("finish", function(e){
+            console.log("当前sse事件推送完毕...");
+        },false);
+
+        source.addEventListener("error", function(e){
+            if(e.readyState == EventSource.CLOSED){
+                console.log("连接已关闭...");
+                var text = document.getElementById("messages");
+                text += '\n连接已关闭...';
+                document.getElementById("messages").innerHTML = text;
+            }else{
+                console.log("连接出错...");
+            }
+        })
+
+
+    }else{
+        console.log("Your browser does not support SSE");
+        closeSSE();
+    }
+    function closeSSE(){
+        source.close();
+    }
+
+</script>
+
+</html>
