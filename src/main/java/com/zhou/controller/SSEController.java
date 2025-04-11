@@ -1,6 +1,7 @@
 package com.zhou.controller;
 
 import com.zhou.service.OllamaService;
+import com.zhou.utils.SSEMsgType;
 import com.zhou.utils.SSEServer;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,12 @@ public class SSEController {
     @GetMapping(path = "connect",produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
     public SseEmitter aiOllamaChat (@RequestParam String userId) {
         return SSEServer.connect(userId);
+    }
+
+    @GetMapping("sendMessage")
+    public Object sendMessage (@RequestParam String userId,@RequestParam String message) {
+        SSEServer.sendMessage(userId,message, SSEMsgType.MESSAGE);
+        return "ok";
     }
 
 }
