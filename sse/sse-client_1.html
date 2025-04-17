@@ -6,15 +6,14 @@
     <title>SSE Client</title>
 </head>
 <body>
-    <h1>SSE Client - 0</h1>
-    <div id="messages" >
-
-    </div>
+    <h1>SSE Client - 1</h1>
+    <div id="messages"></div>
 </body>
 
 <script>
     let source = null;
-    let userId = 1001;
+    // Generate a random userId
+    let userId = Math.floor(Math.random() * 10000) + 1; // Generates a random number between 1 and 10000
     if(window.EventSource){
         source = new EventSource("http://127.0.0.1:8080/sse/connect?userId=" + userId);
         source.addEventListener("open", function(e){
@@ -24,7 +23,6 @@
             document.getElementById("messages").innerHTML = text;
 
         },false);
-
 
         source.addEventListener("message", function(e){
             var msg = e.data;
@@ -63,8 +61,7 @@
             }else{
                 console.log("连接出错...");
             }
-        })
-
+        });
 
     }else{
         console.log("Your browser does not support SSE");
